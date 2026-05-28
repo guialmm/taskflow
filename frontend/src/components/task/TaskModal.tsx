@@ -25,7 +25,7 @@ export default function TaskModal({ task, defaultStatus = "todo", members, onClo
   const [confirmDelete, setConfirmDelete] = useState(false);
   const submitRef = useRef<HTMLButtonElement>(null);
 
-  const { register, handleSubmit, formState: { isSubmitting } } = useForm<FormData>({
+  const { register, handleSubmit, formState: { isSubmitting, errors } } = useForm<FormData>({
     defaultValues: {
       title: task?.title ?? "",
       description: task?.description ?? "",
@@ -58,16 +58,17 @@ export default function TaskModal({ task, defaultStatus = "todo", members, onClo
     <Modal title={task ? "Edit Task" : "New Task"} onClose={onClose}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-700">Title *</label>
-          <input className="input" placeholder="Task title" {...register("title", { required: true })} />
+          <label className="mb-1 block text-xs font-medium text-slate-300">Title *</label>
+          <input className={`input ${errors.title ? "border-red-500 focus:ring-red-500 focus:border-red-500" : ""}`} placeholder="Task title" {...register("title", { required: true })} />
+          {errors.title && <p className="mt-1 text-xs text-red-400">Title is required</p>}
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-700">Description</label>
+          <label className="mb-1 block text-xs font-medium text-slate-300">Description</label>
           <textarea className="input resize-none" rows={3} placeholder="Details..." {...register("description")} />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-700">Status</label>
+            <label className="mb-1 block text-xs font-medium text-slate-300">Status</label>
             <select className="input" {...register("status")}>
               <option value="todo">To Do</option>
               <option value="in_progress">In Progress</option>
@@ -75,7 +76,7 @@ export default function TaskModal({ task, defaultStatus = "todo", members, onClo
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-700">Priority</label>
+            <label className="mb-1 block text-xs font-medium text-slate-300">Priority</label>
             <select className="input" {...register("priority")}>
               <option value="low">Low</option>
               <option value="medium">Medium</option>
@@ -85,11 +86,11 @@ export default function TaskModal({ task, defaultStatus = "todo", members, onClo
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-700">Deadline</label>
+            <label className="mb-1 block text-xs font-medium text-slate-300">Deadline</label>
             <input type="date" className="input" {...register("deadline")} />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-700">Assignee</label>
+            <label className="mb-1 block text-xs font-medium text-slate-300">Assignee</label>
             <select className="input" {...register("assignee_id")}>
               <option value="">Unassigned</option>
               {members.map((m) => (
@@ -99,11 +100,11 @@ export default function TaskModal({ task, defaultStatus = "todo", members, onClo
           </div>
         </div>
 
-        <p className="text-xs text-gray-400">Tip: Ctrl+Enter to save</p>
+        <p className="text-xs text-slate-500">Tip: Ctrl+Enter to save</p>
 
         {confirmDelete ? (
           <div className="flex items-center gap-2 pt-1">
-            <span className="flex-1 text-xs text-red-600">Delete this task?</span>
+            <span className="flex-1 text-xs text-red-400">Delete this task?</span>
             <button type="button" onClick={() => setConfirmDelete(false)} className="btn-secondary text-xs px-3 py-1.5">
               Cancel
             </button>

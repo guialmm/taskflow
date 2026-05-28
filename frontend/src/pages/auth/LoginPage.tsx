@@ -27,20 +27,20 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-indigo-100 p-4">
-      <div className="card w-full max-w-md p-8">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="card w-full max-w-md p-8 animate-fade-in-up">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-500 text-white text-2xl font-bold">T</div>
-          <h1 className="text-2xl font-bold text-gray-900">TaskFlow</h1>
-          <p className="mt-1 text-sm text-gray-500">Sign in to your account</p>
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-500 text-white text-2xl font-bold shadow-lg shadow-primary-500/30">T</div>
+          <h1 className="text-2xl font-bold text-slate-100">TaskFlow</h1>
+          <p className="mt-1 text-sm text-slate-400">Sign in to your account</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {error && (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>
+            <div className="rounded-lg bg-red-950/50 border border-red-800/50 p-3 text-sm text-red-400 animate-fade-in-up">{error}</div>
           )}
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
+            <label className="mb-1 block text-sm font-medium text-slate-300">Email</label>
             <input
               type="email"
               className="input"
@@ -49,7 +49,7 @@ export default function LoginPage() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Password</label>
+            <label className="mb-1 block text-sm font-medium text-slate-300">Password</label>
             <input
               type="password"
               className="input"
@@ -62,9 +62,9 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-gray-500">
+        <p className="mt-6 text-center text-sm text-slate-400">
           Don't have an account?{" "}
-          <Link to="/register" className="font-medium text-primary-600 hover:underline">
+          <Link to="/register" className="font-medium text-primary-400 hover:text-primary-300 hover:underline transition-colors">
             Create one
           </Link>
         </p>

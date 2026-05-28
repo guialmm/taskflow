@@ -15,11 +15,11 @@ export default function Modal({ title, onClose, children }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="card relative z-10 w-full max-w-md p-6">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="card relative z-10 w-full max-w-md p-6 animate-scale-in">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
+          <h2 className="text-lg font-semibold text-slate-100">{title}</h2>
+          <button onClick={onClose} className="text-slate-500 hover:text-slate-200 hover:bg-navy-700 text-xl leading-none transition-colors p-2 -mr-2 rounded-lg">&times;</button>
         </div>
         {children}
       </div>

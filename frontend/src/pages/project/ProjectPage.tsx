@@ -25,14 +25,14 @@ const STATUSES: TaskStatus[] = ["todo", "in_progress", "done"];
 const COLORS = ["#6366f1", "#8b5cf6", "#ec4899", "#f43f5e", "#f97316", "#22c55e", "#14b8a6", "#3b82f6"];
 
 const priorityBadge: Record<TaskPriority, string> = {
-  low: "bg-green-100 text-green-700",
-  medium: "bg-yellow-100 text-yellow-700",
-  high: "bg-red-100 text-red-700",
+  low: "bg-emerald-900/40 text-emerald-400",
+  medium: "bg-amber-900/40 text-amber-400",
+  high: "bg-red-900/40 text-red-400",
 };
 const statusBadge: Record<TaskStatus, string> = {
-  todo: "bg-gray-100 text-gray-600",
-  in_progress: "bg-blue-100 text-blue-600",
-  done: "bg-green-100 text-green-600",
+  todo: "bg-navy-700 text-slate-400",
+  in_progress: "bg-blue-900/40 text-blue-400",
+  done: "bg-emerald-900/40 text-emerald-400",
 };
 const statusLabel: Record<TaskStatus, string> = {
   todo: "To Do",
@@ -62,13 +62,13 @@ export default function ProjectPage() {
   const [inviteSuccess, setInviteSuccess] = useState(false);
   const [showEditProject, setShowEditProject] = useState(false);
 
-  // Filters
   const [search, setSearch] = useState("");
   const [filterPriority, setFilterPriority] = useState<TaskPriority | "">("");
   const [filterAssignee, setFilterAssignee] = useState<number | "">("");
   const [view, setView] = useState<"kanban" | "list">("kanban");
 
   const editForm = useForm<EditProjectForm>();
+  const editProjectErrors = editForm.formState.errors;
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
@@ -184,7 +184,14 @@ export default function ProjectPage() {
     setShowEditProject(false);
   };
 
-  if (!project) return <div className="flex min-h-screen items-center justify-center text-gray-400">Loading...</div>;
+  if (!project) return (
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="flex items-center gap-3 text-slate-400">
+        <div className="h-5 w-5 animate-spin rounded-full border-2 border-navy-600 border-t-primary-500" />
+        Loading...
+      </div>
+    </div>
+  );
 
   const members: Member[] = project.members;
   const isOwner = project.owner_id === user?.id;
@@ -194,19 +201,18 @@ export default function ProjectPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="border-b border-gray-200 bg-white px-6 py-3">
+      <header className="border-b border-navy-600 bg-navy-800 px-6 py-3">
         <div className="mx-auto flex max-w-full items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Link to="/" className="text-sm text-gray-500 hover:text-gray-700">← Projects</Link>
-            <div className="h-4 w-px bg-gray-200" />
+            <Link to="/" className="text-sm text-slate-400 hover:text-slate-200 transition-colors">← Projects</Link>
+            <div className="h-4 w-px bg-navy-600" />
             <div className="flex items-center gap-2">
-              <div className="h-7 w-7 rounded-md flex-shrink-0" style={{ backgroundColor: project.color }} />
-              <h1 className="text-base font-semibold text-gray-900">{project.name}</h1>
+              <div className="h-7 w-7 rounded-md flex-shrink-0 shadow-sm" style={{ backgroundColor: project.color }} />
+              <h1 className="text-base font-semibold text-slate-100">{project.name}</h1>
               {isOwner && (
                 <button
                   onClick={openEditProject}
-                  className="text-gray-400 hover:text-gray-600 text-xs ml-1"
+                  className="text-slate-500 hover:text-slate-300 text-xs ml-1 transition-colors"
                   title="Edit project"
                 >
                   ✎
@@ -215,17 +221,16 @@ export default function ProjectPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            {/* View toggle */}
-            <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs">
+            <div className="flex rounded-lg border border-navy-600 overflow-hidden text-xs">
               <button
                 onClick={() => setView("kanban")}
-                className={`px-3 py-1.5 ${view === "kanban" ? "bg-primary-500 text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}
+                className={`px-3 py-1.5 transition-colors ${view === "kanban" ? "bg-primary-500 text-white" : "bg-navy-700 text-slate-400 hover:bg-navy-600"}`}
               >
                 Board
               </button>
               <button
                 onClick={() => setView("list")}
-                className={`px-3 py-1.5 ${view === "list" ? "bg-primary-500 text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}
+                className={`px-3 py-1.5 transition-colors ${view === "list" ? "bg-primary-500 text-white" : "bg-navy-700 text-slate-400 hover:bg-navy-600"}`}
               >
                 List
               </button>
@@ -244,8 +249,7 @@ export default function ProjectPage() {
         </div>
       </header>
 
-      {/* Filter bar */}
-      <div className="border-b border-gray-100 bg-white px-6 py-2">
+      <div className="border-b border-navy-700 bg-navy-800 px-6 py-2">
         <div className="flex items-center gap-3 flex-wrap">
           <input
             className="input max-w-[200px] py-1 text-xs"
@@ -258,7 +262,7 @@ export default function ProjectPage() {
               <button
                 key={p}
                 onClick={() => setFilterPriority(p)}
-                className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${filterPriority === p ? "bg-primary-500 text-white border-primary-500" : "border-gray-300 text-gray-600 hover:border-gray-400"}`}
+                className={`text-xs px-2.5 py-1 rounded-full border transition-all duration-150 ${filterPriority === p ? "bg-primary-500 text-white border-primary-500" : "border-navy-600 text-slate-400 hover:border-navy-500 hover:text-slate-300"}`}
               >
                 {p || "All"}
               </button>
@@ -277,23 +281,22 @@ export default function ProjectPage() {
           {hasFilters && (
             <button
               onClick={() => { setSearch(""); setFilterPriority(""); setFilterAssignee(""); }}
-              className="text-xs text-gray-400 hover:text-gray-600"
+              className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
             >
               Clear filters
             </button>
           )}
-          <span className="text-xs text-gray-400 ml-auto">
+          <span className="text-xs text-slate-500 ml-auto">
             {filteredTasks.length} task{filteredTasks.length !== 1 ? "s" : ""}
           </span>
         </div>
       </div>
 
-      {/* Main board / list */}
       <main className="flex-1 overflow-x-auto p-6">
         {view === "kanban" ? (
           <DndContext sensors={sensors} collisionDetection={closestCorners} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
             <div className="flex gap-5 min-h-full">
-              {STATUSES.map((status) => (
+              {STATUSES.map((status, i) => (
                 <KanbanColumn
                   key={status}
                   status={status}
@@ -301,20 +304,21 @@ export default function ProjectPage() {
                   members={members}
                   onAddTask={(s) => setNewTaskStatus(s)}
                   onTaskClick={setSelectedTask}
+                  index={i}
                 />
               ))}
             </div>
           </DndContext>
         ) : (
-          <div className="card overflow-hidden">
+          <div className="card overflow-hidden animate-fade-in-up">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="text-left py-2.5 px-4 font-medium text-gray-600">Title</th>
-                  <th className="text-left py-2.5 px-4 font-medium text-gray-600">Status</th>
-                  <th className="text-left py-2.5 px-4 font-medium text-gray-600">Priority</th>
-                  <th className="text-left py-2.5 px-4 font-medium text-gray-600">Assignee</th>
-                  <th className="text-left py-2.5 px-4 font-medium text-gray-600">Deadline</th>
+                <tr className="border-b border-navy-600 bg-navy-700">
+                  <th className="text-left py-2.5 px-4 font-medium text-slate-400">Title</th>
+                  <th className="text-left py-2.5 px-4 font-medium text-slate-400">Status</th>
+                  <th className="text-left py-2.5 px-4 font-medium text-slate-400">Priority</th>
+                  <th className="text-left py-2.5 px-4 font-medium text-slate-400">Assignee</th>
+                  <th className="text-left py-2.5 px-4 font-medium text-slate-400">Deadline</th>
                 </tr>
               </thead>
               <tbody>
@@ -328,15 +332,15 @@ export default function ProjectPage() {
                     <tr
                       key={task.id}
                       onClick={() => setSelectedTask(task)}
-                      className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                      className="border-b border-navy-700 hover:bg-navy-700 cursor-pointer transition-colors"
                     >
                       <td className="py-2.5 px-4">
-                        <span className={`font-medium ${task.status === "done" ? "line-through text-gray-400" : "text-gray-900"}`}>
-                          {task.status === "done" && <span className="text-green-500 mr-1.5">✓</span>}
+                        <span className={`font-medium ${task.status === "done" ? "line-through text-slate-500" : "text-slate-200"}`}>
+                          {task.status === "done" && <span className="text-emerald-400 mr-1.5">✓</span>}
                           {task.title}
                         </span>
                         {task.description && (
-                          <span className="block text-xs text-gray-400 truncate max-w-[300px]">{task.description}</span>
+                          <span className="block text-xs text-slate-500 truncate max-w-[300px]">{task.description}</span>
                         )}
                       </td>
                       <td className="py-2.5 px-4">
@@ -349,17 +353,17 @@ export default function ProjectPage() {
                         {task.assignee ? (
                           <div className="flex items-center gap-2">
                             <Avatar username={task.assignee.username} color={task.assignee.avatar_color} size="sm" />
-                            <span className="text-xs text-gray-600">{task.assignee.username}</span>
+                            <span className="text-xs text-slate-400">{task.assignee.username}</span>
                           </div>
                         ) : (
-                          <span className="text-xs text-gray-400">—</span>
+                          <span className="text-xs text-slate-600">—</span>
                         )}
                       </td>
                       <td className="py-2.5 px-4">
                         {task.deadline ? (
-                          <span className="text-xs text-gray-600">{format(parseISO(task.deadline), "MMM d, yyyy")}</span>
+                          <span className="text-xs text-slate-400">{format(parseISO(task.deadline), "MMM d, yyyy")}</span>
                         ) : (
-                          <span className="text-xs text-gray-400">—</span>
+                          <span className="text-xs text-slate-600">—</span>
                         )}
                       </td>
                     </tr>
@@ -367,7 +371,7 @@ export default function ProjectPage() {
               </tbody>
             </table>
             {filteredTasks.length === 0 && (
-              <div className="text-center py-10 text-gray-400">
+              <div className="text-center py-10 text-slate-500">
                 <p className="text-2xl mb-2">📋</p>
                 <p className="text-sm">{hasFilters ? "No tasks match your filters" : "No tasks yet. Switch to Board view to add one."}</p>
               </div>
@@ -376,7 +380,6 @@ export default function ProjectPage() {
         )}
       </main>
 
-      {/* Create task modal */}
       {newTaskStatus && (
         <TaskModal
           defaultStatus={newTaskStatus}
@@ -386,7 +389,6 @@ export default function ProjectPage() {
         />
       )}
 
-      {/* Edit task modal */}
       {selectedTask && (
         <TaskModal
           task={selectedTask}
@@ -397,14 +399,13 @@ export default function ProjectPage() {
         />
       )}
 
-      {/* Invite modal */}
       {showInvite && (
         <Modal title="Invite Member" onClose={() => setShowInvite(false)}>
           <div className="space-y-3">
-            {inviteSuccess && <p className="text-sm text-green-600 font-medium">Member invited successfully!</p>}
-            {inviteError && <p className="text-sm text-red-600">{inviteError}</p>}
+            {inviteSuccess && <p className="text-sm text-emerald-400 font-medium">Member invited successfully!</p>}
+            {inviteError && <p className="text-sm text-red-400">{inviteError}</p>}
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Username</label>
+              <label className="mb-1 block text-sm font-medium text-slate-300">Username</label>
               <input
                 className="input"
                 placeholder="Enter username"
@@ -421,27 +422,27 @@ export default function ProjectPage() {
         </Modal>
       )}
 
-      {/* Edit project modal */}
       {showEditProject && (
         <Modal title="Edit Project" onClose={() => setShowEditProject(false)}>
           <form onSubmit={editForm.handleSubmit(handleEditProject)} className="space-y-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Name *</label>
-              <input className="input" {...editForm.register("name", { required: true })} />
+              <label className="mb-1 block text-sm font-medium text-slate-300">Name *</label>
+              <input className={`input ${editProjectErrors.name ? "border-red-500 focus:ring-red-500 focus:border-red-500" : ""}`} {...editForm.register("name", { required: true })} />
+              {editProjectErrors.name && <p className="mt-1 text-xs text-red-400">Name is required</p>}
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Description</label>
+              <label className="mb-1 block text-sm font-medium text-slate-300">Description</label>
               <textarea className="input resize-none" rows={2} {...editForm.register("description")} />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">Color</label>
+              <label className="mb-2 block text-sm font-medium text-slate-300">Color</label>
               <div className="flex gap-2">
                 {COLORS.map((c) => (
                   <button
                     key={c}
                     type="button"
                     onClick={() => editForm.setValue("color", c)}
-                    className={`h-7 w-7 rounded-full border-2 transition-transform ${editColor === c ? "border-gray-900 scale-110" : "border-transparent"}`}
+                    className={`h-7 w-7 rounded-full border-2 transition-transform hover:scale-110 ${editColor === c ? "border-white scale-110" : "border-transparent"}`}
                     style={{ backgroundColor: c }}
                   />
                 ))}
