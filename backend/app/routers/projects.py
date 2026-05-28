@@ -2,6 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import case, func
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -73,7 +74,11 @@ def create_project(
 
     membership = ProjectMember(project_id=project.id, user_id=current_user.id, role="owner")
     db.add(membership)
-    db.commit()
+    try:
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to create project")
     db.refresh(project)
     return project
 
@@ -102,7 +107,11 @@ def update_project(
 
     for field, value in payload.model_dump(exclude_none=True).items():
         setattr(project, field, value)
-    db.commit()
+    try:
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to update project")
     db.refresh(project)
     return project
 
@@ -116,7 +125,11 @@ def delete_project(
     project = get_project_or_404(project_id, db)
     require_owner(project, current_user)
     db.delete(project)
-    db.commit()
+    try:
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to delete project")
 
 
 @router.post("/{project_id}/members", response_model=MemberOut, status_code=status.HTTP_201_CREATED)
@@ -139,7 +152,11 @@ def invite_member(
 
     membership = ProjectMember(project_id=project_id, user_id=target.id, role="member")
     db.add(membership)
-    db.commit()
+    try:
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to add member")
     db.refresh(membership)
     return membership
 
@@ -162,4 +179,8 @@ def remove_member(
         raise HTTPException(status_code=404, detail="Member not found")
 
     db.delete(membership)
-    db.commit()
+    try:
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to remove member")

@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -78,7 +79,11 @@ def create_task(
         position=last_position,
     )
     db.add(task)
-    db.commit()
+    try:
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to create task")
     db.refresh(task)
     return task
 
@@ -98,7 +103,11 @@ def update_task(
 
     for field, value in payload.model_dump(exclude_none=True).items():
         setattr(task, field, value)
-    db.commit()
+    try:
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to update task")
     db.refresh(task)
     return task
 
@@ -115,4 +124,8 @@ def delete_task(
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     db.delete(task)
-    db.commit()
+    try:
+        db.commit()
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to delete task")

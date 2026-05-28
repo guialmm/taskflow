@@ -2,6 +2,7 @@ import axios from "axios";
 
 const client = axios.create({
   baseURL: "/api",
+  timeout: 15000,
 });
 
 client.interceptors.request.use((config) => {
@@ -18,7 +19,17 @@ client.interceptors.response.use(
     if (err.response?.status === 401) {
       localStorage.removeItem("token");
       window.location.href = "/login";
+      return Promise.reject(err);
     }
+
+    if (!err.response) {
+      return Promise.reject(
+        Object.assign(err, {
+          response: { data: { detail: "Sem conexão com o servidor. Verifique sua rede." } },
+        })
+      );
+    }
+
     return Promise.reject(err);
   }
 );
