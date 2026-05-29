@@ -3,10 +3,10 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import type { Member, Task, TaskStatus } from "../../types";
 import TaskCard from "../task/TaskCard";
 
-const columnConfig: Record<TaskStatus, { label: string; color: string }> = {
-  todo: { label: "To Do", color: "bg-navy-700 text-slate-400" },
-  in_progress: { label: "In Progress", color: "bg-blue-900/40 text-blue-400" },
-  done: { label: "Done", color: "bg-emerald-900/40 text-emerald-400" },
+const columnConfig: Record<TaskStatus, { label: string; color: string; accent: string }> = {
+  todo:        { label: "To Do",       color: "bg-navy-700/60 text-slate-400",       accent: "rgba(100,116,139,0.5)" },
+  in_progress: { label: "In Progress", color: "bg-blue-900/40 text-blue-400",        accent: "rgba(59,130,246,0.6)"  },
+  done:        { label: "Done",        color: "bg-emerald-900/40 text-emerald-400",  accent: "rgba(16,185,129,0.6)"  },
 };
 
 interface Props {
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default function KanbanColumn({ status, tasks, onAddTask, onTaskClick, index = 0 }: Props) {
-  const { label, color } = columnConfig[status];
+  const { label, color, accent } = columnConfig[status];
   const { setNodeRef } = useDroppable({ id: status });
 
   return (
@@ -27,14 +27,18 @@ export default function KanbanColumn({ status, tasks, onAddTask, onTaskClick, in
       className="flex flex-col w-72 flex-shrink-0 animate-fade-in-up"
       style={{ animationDelay: `${index * 80}ms`, animationFillMode: "both" }}
     >
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 flex items-center justify-between px-0.5">
         <div className="flex items-center gap-2">
+          <span
+            className="inline-block h-2 w-2 rounded-full flex-shrink-0"
+            style={{ background: accent, boxShadow: `0 0 6px ${accent}` }}
+          />
           <span className={`badge ${color} font-semibold`}>{label}</span>
-          <span className="text-xs text-slate-500">{tasks.length}</span>
+          <span className="text-xs text-slate-500 tabular-nums">{tasks.length}</span>
         </div>
         <button
           onClick={() => onAddTask(status)}
-          className="text-slate-500 hover:text-primary-400 text-lg leading-none font-medium transition-all hover:scale-110"
+          className="text-slate-500 hover:text-primary-400 text-xl leading-none font-light transition-all hover:scale-110 hover:rotate-90 duration-200"
           title="Add task"
         >
           +
@@ -50,7 +54,20 @@ export default function KanbanColumn({ status, tasks, onAddTask, onTaskClick, in
         {tasks.length === 0 && (
           <button
             onClick={() => onAddTask(status)}
-            className="flex flex-col items-center justify-center min-h-[80px] rounded-xl border-2 border-dashed border-navy-600 text-center hover:border-primary-600/50 hover:bg-primary-900/10 transition-all duration-200 group"
+            className="flex flex-col items-center justify-center min-h-[80px] rounded-xl text-center transition-all duration-250 group"
+            style={{
+              border: '1.5px dashed rgba(255,255,255,0.08)',
+              background: 'rgba(255,255,255,0.015)',
+              transition: 'all 0.22s cubic-bezier(0.16,1,0.3,1)',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = `${accent}`;
+              e.currentTarget.style.background = 'rgba(59,130,246,0.04)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+              e.currentTarget.style.background = 'rgba(255,255,255,0.015)';
+            }}
           >
             <span className="text-xs text-slate-500 group-hover:text-primary-400 transition-colors">+ Add task</span>
           </button>

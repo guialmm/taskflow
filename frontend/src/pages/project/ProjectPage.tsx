@@ -201,7 +201,8 @@ export default function ProjectPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b border-navy-600 bg-navy-800 px-6 py-3">
+      <div className="glass-nav sticky top-0 z-10">
+      <header className="px-6 py-3">
         <div className="mx-auto flex max-w-full items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Link to="/" className="text-sm text-slate-400 hover:text-slate-200 transition-colors">← Projects</Link>
@@ -249,7 +250,7 @@ export default function ProjectPage() {
         </div>
       </header>
 
-      <div className="border-b border-navy-700 bg-navy-800 px-6 py-2">
+      <div className="border-t border-white/[0.05] px-6 py-2">
         <div className="flex items-center gap-3 flex-wrap">
           <input
             className="input max-w-[200px] py-1 text-xs"
@@ -290,6 +291,7 @@ export default function ProjectPage() {
             {filteredTasks.length} task{filteredTasks.length !== 1 ? "s" : ""}
           </span>
         </div>
+      </div>
       </div>
 
       <main className="flex-1 overflow-x-auto p-6">

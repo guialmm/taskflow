@@ -30,7 +30,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="card w-full max-w-md p-8 animate-fade-in-up">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-500 text-white text-2xl font-bold shadow-lg shadow-primary-500/30">T</div>
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-500 text-white text-2xl font-bold animate-float" style={{ boxShadow: '0 6px 28px -4px rgba(59,130,246,0.6)' }}>T</div>
           <h1 className="text-2xl font-bold text-slate-100">TaskFlow</h1>
           <p className="mt-1 text-sm text-slate-400">Sign in to your account</p>
         </div>

@@ -20,7 +20,7 @@ export default function TaskCard({ task, onClick }: Props) {
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: isDragging ? transition : 'transform 0.22s cubic-bezier(0.16,1,0.3,1), box-shadow 0.22s cubic-bezier(0.16,1,0.3,1)',
   };
 
   const isDone = task.status === "done";
@@ -44,12 +44,20 @@ export default function TaskCard({ task, onClick }: Props) {
       {...attributes}
       {...listeners}
       onClick={onClick}
-      className={`card p-3 cursor-pointer transition-all duration-150 select-none
-        hover:shadow-xl hover:shadow-black/50 hover:-translate-y-0.5 hover:border-navy-500
-        active:scale-[0.98]
-        ${isDragging ? "opacity-40 ring-2 ring-primary-500/50 shadow-lg shadow-primary-500/20 scale-[0.98]" : ""}
-        ${isDone ? "opacity-60" : ""}
+      className={`card p-3 cursor-pointer select-none active:scale-[0.98]
+        ${isDragging ? "opacity-40 scale-[0.97]" : ""}
+        ${isDone ? "opacity-55" : ""}
       `}
+      onMouseEnter={e => {
+        if (!isDragging) {
+          e.currentTarget.style.transform = 'translateY(-2px)';
+          e.currentTarget.style.boxShadow = '0 8px 28px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1)';
+        }
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.transform = '';
+        e.currentTarget.style.boxShadow = '';
+      }}
     >
       <div className="flex items-start gap-1.5">
         {isDone && <span className="text-emerald-400 text-sm flex-shrink-0 mt-0.5">✓</span>}

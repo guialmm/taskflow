@@ -74,10 +74,10 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-navy-600 bg-navy-800 px-6 py-4">
+      <header className="glass-nav sticky top-0 z-10 px-6 py-4">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-500 text-white font-bold text-sm shadow-md shadow-primary-500/30">T</div>
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-500 text-white font-bold text-sm animate-glow-pulse">T</div>
             <span className="text-lg font-bold text-slate-100">TaskFlow</span>
           </div>
           <div className="relative" ref={userMenuRef}>
@@ -133,8 +133,10 @@ export default function DashboardPage() {
               <Link
                 key={p.id}
                 to={`/projects/${p.id}`}
-                className="card p-5 hover:shadow-xl hover:shadow-black/40 hover:-translate-y-1 hover:border-navy-500 transition-all duration-200 group block animate-card-enter"
-                style={{ animationDelay: `${i * 60}ms`, animationFillMode: "both" }}
+                className="card p-5 group block animate-card-enter hover:-translate-y-1.5"
+                style={{ animationDelay: `${i * 60}ms`, animationFillMode: "both", transition: 'transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s cubic-bezier(0.16,1,0.3,1)' }}
+                onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(59,130,246,0.18), 0 0 24px -8px rgba(59,130,246,0.35)')}
+                onMouseLeave={e => (e.currentTarget.style.boxShadow = '')}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
